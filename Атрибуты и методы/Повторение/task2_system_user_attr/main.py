@@ -6,4 +6,5 @@ class Glass:
 
 if __name__ == "__main__":
     glass = Glass(200, 0)
-    print(dir(glass))
+    print(dir(glass)
+
