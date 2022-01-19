@@ -23,11 +23,22 @@ class IStructureDriver(ABC):
 
 
 class SimpleFileDriver(IStructureDriver):
-    ...  # TODO реализовать драйвер работы с текстовым файлом
 
-    # TODO реализовать метод чтения данных из файла
+    def __init__(self, filename: str):  #  реализовать драйвер работы с текстовым файлом
+        self.filename = filename
 
-    # TODO реализовать метод записи в файл построчно
+    def read(self) -> Iterable:
+        with open(self.filename) as f:
+            return [int(line.rstrip()) for line in f]
+
+    def write(self, data: Iterable) -> None:
+        with open(self.filename) as f:
+            for value in data:
+                f.write(str(value) + "\n")
+
+    # реализовать метод чтения данных из файла
+
+
 
     def __repr__(self):
         return f"{self.__class__.__name__}(\"{self.filename}\")"
