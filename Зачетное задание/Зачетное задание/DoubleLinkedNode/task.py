@@ -1,7 +1,14 @@
+from typing import Any, Optional
+
 class Node:
     """ Класс, который описывает узел связного списка. """
 
-    def __init__(self, value: float, next_=None):
+    def __init__(self, value: Any, next_: Optional["Node"] = None):
+        """
+        Создаем новый узел для односвязного списка
+        :param value: Любое значение, которое помещено в узел
+        :param next_: следующий узел, если он есть
+        """
         self.value = value
         self.next_ = next_
 
@@ -9,12 +16,42 @@ class Node:
         return f"{self.value}"
 
     def __repr__(self) -> str:
-        return f"Node({self.value}, {self.next_})"
+        return f"Node({self.value}, {None})" if self.next_ is None else f"Node({self.value})"
 
+    def is_valid(self, node: Any) -> None:
+        if not isinstance(node, (type(None), Node)):
+            raise TypeError
+
+    @property
+    def next(self):
+        return self._next
+
+    @next.setter
+    def next(self, next_: Optional["Node"]):
+        self.is_valid(next_)
+        self._next = next_
 
 class DoubleLinkedNode(Node):
-    ...
+    def __init__ (self, value, next_=None, prev=None):
+        super().__init__(value, next_)
+        self.prev = prev
 
+    def __repr__(self) -> str:
+        name = self.__class__.__name__
+        return f"{name}({self.value}, {None})" if self.next_ is None else f"Node({self.value}, Node({self.next}))"
+
+    def is_valid(self, doublenode: Any) -> None:
+        if not isinstance(doublenode, (type(None), DoubleLinkedNode)):
+            raise TypeError
+
+    @property
+    def prev(self):
+        return self._prev
+
+    @prev.setter
+    def next(self, prev: Optional["DoubleLinkedNode"]):
+        self.is_valid(prev)
+        self._prev = prev
 
 if __name__ == "__main__":
     node = Node(5)
