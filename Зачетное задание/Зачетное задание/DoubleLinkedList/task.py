@@ -9,13 +9,12 @@ class LinkedList(MutableSequence):
     def __init__(self, data: Iterable = None):
         """Конструктор связного списка"""
         self.len = 0
-        self.head: Optional[Node] = None
-        self.tail = self.head
+        self._head: Optional[Node] = None
+        self.tail = self._head
 
         if data is not None:
             for value in data:
                 self.append(value)
-
 
     def step_by_step_on_nodes(self, index: int) -> Node:
         """ Функция выполняет перемещение по узлам до указанного индекса. И возвращает узел. """
@@ -32,7 +31,7 @@ class LinkedList(MutableSequence):
         return current_node
 
     @staticmethod
-    def linked_nodes(left_node: Node, right_node: Optional[Node] = None) -> None:
+    def _linked_nodes(left_node: Node, right_node: Optional[Node] = None) -> None:
         """
         Функция, которая связывает между собой два узла.
 
@@ -111,11 +110,79 @@ class LinkedList(MutableSequence):
             i += 1
         return sum_
 
+    def extend(self, value: list) -> None:
+        """ Добавление всех элементов в конец связанного списка"""
+        for i in range(len(value)):
+            self.append(value[i])
+
+    def pop(self, index: int) -> Node:
+        """Удаляет элемент из списка и возвращает элемент"""
+        node = self._step_by_step_on_nodes(index)
+        self.__delitem__(index)
+        return node.value
+
+
+#class DoubleLinkedNode(Node):
+#    def __init__(self, value: Any, prev: Optional["Node"] = None, next_: Optional["Node"] = None):
+#        super().__init__(value, next_)
+#        self.prev = prev
+
+#    @property
+#    def prev(self):
+#        return self._prev
+
+#    @prev.setter
+#    def prev(self, prev: Optional["Node"]):
+#        self.is_valid(prev)
+#        self._prev = prev
+
+#    def __repr__(self) -> str:
+#        next_prev = None if self.prev is None else f"DoubleLinkedNode({self.prev})"
+#        next_repr = None if self.next is None else f"DoubleLinkedNode({self.next})"  # make all
+
+#        return f"DoubleLinkedNode({self.value}, {next_prev}, {next_repr})"
+
 
 
 class DoubleLinkedList(LinkedList):
-    ...
+    node_class = DoubleLinkedNode
+
+    #super().__init__()
+
+    @staticmethod
+    def linked_nodes(left_node: DoubleLinkedNode, right_node: Optional[DoubleLinkedNode] = None) -> None:
+        left_node.next = right_node
+        right_node.prev = left_node
+
+    def append(self, value: Any):
+        """ Добавление элемента в конец связного списка. """
+        append_node = DoubleLinkedNode(value)
+
+        if self.head is None:
+            self.head = self.tail = append_node
+        else:
+            self.linked_nodes(self.tail, append_node)
+            self.tail = append_node
+
+        self.len += 1
 
 
 if __name__ == "__main__":
-    ...
+    list_ = ['a', 'b', 'c']
+    ll = LinkedList(list_)
+    print(ll.__getitem__(1))
+    print(ll.__setitem__(1, 'v'))
+    print(ll)
+    ll.__delitem__(1)
+    print(ll)
+    ll.insert(3, 'b')
+    print(ll)
+    print(len(ll))
+    ll.append('d')
+    print(ll)
+    print.index('b')
+    print(ll.count('b'))
+    ll.extend(['df', 'as'])
+    print(ll)
+    print(ll.pop(4))
+    print(ll)
